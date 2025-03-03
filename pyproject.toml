@@ -1,6 +1,6 @@
 [project]
 name = "ibkr_event_daemon"
-version = "0.1.0"
+version = "0.2.0"
 description = "A lightweight event handling tool for Interactive Brokers based on the ibevent library. This project automates the process of capturing, triggering, and dispatching events from the IBKR trading platform."
 authors = [
     {name = "Shawn Deng", email = "shawndeng1109@qq.com"}
