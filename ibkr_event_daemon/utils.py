@@ -35,10 +35,10 @@ def load_hook(file_path):
 
 
 def collect_pyfile(path: str) -> Optional[list[str]]:  # noqa: D103
-    if os.is_dir(path):
+    if os.path.isdir(path):
         pattern = os.path.join(path, "**", "*.py")
         return glob.glob(pattern, recursive=True)
-    elif os.is_file(path) and path.endswith(".py"):
+    elif os.path.isfile(path) and path.endswith(".py"):
         return [path]
     return None
 
@@ -51,7 +51,3 @@ def prepare_task_path(env_key: str = "IBKR_DAEMON_TASKS") -> list[str]:  # noqa:
         py_files.extend(collect_pyfile(path))
     py_files = [file for file in py_files if not file.endswith("__init__.py")]
     return py_files
-
-
-if __name__ == "__main__":
-    print(os.pathsep)
