@@ -228,4 +228,3 @@ def docs_serve(session: nox.Session) -> None:
     """
     install_with_uv(session, extras=["docs"])
     session.run("uv", "run", "mkdocs", "serve")
-
