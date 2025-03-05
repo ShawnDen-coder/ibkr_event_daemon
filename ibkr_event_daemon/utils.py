@@ -5,7 +5,7 @@ from logging import getLogger
 from typing import Optional
 
 
-def load_hook(file_path):
+def load_hook(file_path: str) -> Optional[callable]:
     """Load a hook module from a file path and return its run function.
 
     This function dynamically loads a Python module from the given file path
@@ -17,11 +17,6 @@ def load_hook(file_path):
 
     Returns:
         callable: The run function from the module, or None if loading fails.
-
-    Example:
-        >>> hook = load_hook('/path/to/hook.py')
-        >>> if hook:
-        ...     hook(context)
     """
     logger = getLogger(__name__)
     try:
@@ -43,11 +38,14 @@ def collect_pyfile(path: str) -> Optional[list[str]]:  # noqa: D103
     return None
 
 
-def prepare_task_path(env_key: str = "IBKR_DAEMON_TASKS") -> list[str]:  # noqa: D103
+def prepare_task_path(env_key: str = "IB_DAEMON_TASKS") -> list[str]:  # noqa: D103
+    logger = getLogger(__name__)
     env_data: list[str] = os.getenv(env_key, "").split(os.pathsep)
+    logger.debug("Task path: %s", "\t".join(env_data))
     env_data = [path for path in env_data if os.path.exists(path)]
     py_files: list[str] = []
     for path in env_data:
         py_files.extend(collect_pyfile(path))
     py_files = [file for file in py_files if not file.endswith("__init__.py")]
+    logger.debug("Task files: %s", "\t".join(py_files))
     return py_files

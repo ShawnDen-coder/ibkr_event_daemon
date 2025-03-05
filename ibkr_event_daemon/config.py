@@ -3,16 +3,32 @@ from ib_async.ib import StartupFetchALL
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
-
-class Config(BaseSettings):  # noqa: D101
+class IBConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="IB_")
 
     # IB Connection Settings
     host: str = "127.0.0.1"
     port: int = 7497
-    client_id: int = 1
+    clientId: int = 1
     timeout: float = 4.0
     readonly: bool = False
     account: str = ""
-    raise_sync_errors: bool = False
-    fetch_fields: StartupFetch = StartupFetchALL
+    raiseSyncErrors: bool = False
+    fetchFields: StartupFetch = StartupFetchALL
+ 
+class DaemonConfig(BaseSettings):      
+    model_config = SettingsConfigDict(env_prefix="IB_")
+    tasks: str = ""
+    log_level: str = "INFO"
+
+class Config(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="IB_")
+    ib: IBConfig = IBConfig()
+    daemon: DaemonConfig = DaemonConfig()
+
+
+
+if __name__ == "__main__":
+    config = Config()
+
+    print(config.model_dump())
