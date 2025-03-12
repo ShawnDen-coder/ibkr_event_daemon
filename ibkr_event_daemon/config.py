@@ -3,6 +3,7 @@ from ib_async.ib import StartupFetchALL
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
+
 class IBConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="IB_")
 
@@ -15,8 +16,8 @@ class IBConfig(BaseSettings):
     account: str = ""
     raiseSyncErrors: bool = False
     fetchFields: StartupFetch = StartupFetchALL
- 
-class DaemonConfig(BaseSettings):      
+
+class DaemonConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="IB_")
     tasks: str = ""
     log_level: str = "INFO"
@@ -25,7 +26,6 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="IB_")
     ib: IBConfig = IBConfig()
     daemon: DaemonConfig = DaemonConfig()
-
 
 
 if __name__ == "__main__":

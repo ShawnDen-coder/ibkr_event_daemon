@@ -1,5 +1,4 @@
 version = 1
-revision = 1
 requires-python = ">=3.12.0"
 
 [[package]]
@@ -49,6 +48,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/04/7b415bd75c8ab3268cc138c76fa648c19495fcc7d155508a0e62f3f82308/backrefs-5.8-py312-none-any.whl", hash = "sha256:bbef7169a33811080d67cdf1538c8289f76f0942ff971222a16034da88a73486", size = 398021 },
     { url = "https://files.pythonhosted.org/packages/04/b8/60dcfb90eb03a06e883a92abbc2ab95c71f0d8c9dd0af76ab1d5ce0b1402/backrefs-5.8-py313-none-any.whl", hash = "sha256:e3a63b073867dbefd0536425f43db618578528e3896fb77be7141328642a1585", size = 399915 },
     { url = "https://files.pythonhosted.org/packages/0c/37/fb6973edeb700f6e3d6ff222400602ab1830446c25c7b4676d8de93e65b8/backrefs-5.8-py39-none-any.whl", hash = "sha256:a66851e4533fb5b371aa0628e1fee1af05135616b86140c9d787a2ffdf4b8fdc", size = 380336 },
+]
+
+[[package]]
+name = "blinker"
+version = "1.9.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/28/9b3f50ce0e048515135495f198351908d99540d69bfdc8c1d15b73dc55ce/blinker-1.9.0.tar.gz", hash = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf", size = 22460 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl", hash = "sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc", size = 8458 },
 ]
 
 [[package]]
@@ -294,6 +302,7 @@ name = "ibkr-event-daemon"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "blinker" },
     { name = "click" },
     { name = "ibevent" },
     { name = "pydantic" },
@@ -322,6 +331,7 @@ docs = [
 
 [package.metadata]
 requires-dist = [
+    { name = "blinker", specifier = ">=1.9.0" },
     { name = "click", specifier = ">=8.1.8" },
     { name = "commitizen", marker = "extra == 'dev'", specifier = ">=3.12.0" },
     { name = "ibevent", specifier = ">=0.2.0" },
@@ -341,7 +351,6 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
     { name = "supervisor", specifier = ">=4.2.5" },
 ]
-provides-extras = ["dev", "docs"]
 
 [[package]]
 name = "idna"
