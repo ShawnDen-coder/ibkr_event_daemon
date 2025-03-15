@@ -5,6 +5,7 @@ from loguru import logger
 from typing_extensions import Optional
 
 from ibkr_event_daemon import utils
+from ibkr_event_daemon.config import IbkrSettings
 
 
 LoggerType = logger.__class__
@@ -16,12 +17,15 @@ class HookModule(Protocol):
 
 
 class IBKRClient:
-    def __init__(self,ib:IB):
+    def __init__(self,ib:Optional[IB]=None,config:IbkrSettings = IbkrSettings):
         self.ib:IB = ib or IB()
+        self.config = config()
 
     def _setup_ib_session(self):
         logger.info("start connect TWS ...")
-        self.ib.connect("127.0.0.1",7497)
+        _config = self.config.model_dump(by_alias=True, exclude="paths")
+        logger.debug(f"loading ibkr config: {_config}")
+        self.ib.connect(**_config)
 
     def _setup_callback(self):
         files = utils.prepare_task_path()
@@ -36,8 +40,7 @@ class IBKRClient:
                 logger.exception(f"load moudle {moudle.__name__} error: \n {e}")
 
     def setup(self):
-        if not self.ib.isConnected:
-            self._setup_ib_session()
+        self._setup_ib_session()
         self._setup_callback()
 
     def pre_action(self):
@@ -54,3 +57,11 @@ class IBKRClient:
         except KeyboardInterrupt:
             self.stop()
             logger.info("Program interrupted and stopped.")
+
+if __name__ =="__main__":
+    import sys
+    logger.remove()
+    logger.add(sys.stderr, level="DEBUG")
+    
+    ib = IBKRClient()
+    ib.excute()
