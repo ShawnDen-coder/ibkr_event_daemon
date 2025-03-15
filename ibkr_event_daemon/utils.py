@@ -1,29 +1,12 @@
 import glob
 import importlib
 import os
-from logging import getLogger
 from typing import Optional
+
+from loguru import logger
 
 
 def load_hook(file_path):
-    """Load a hook module from a file path and return its run function.
-
-    This function dynamically loads a Python module from the given file path
-    and extracts its 'run' function. The module should define a function
-    named 'run' that takes a HookContext object as its argument.
-
-    Args:
-        file_path (str): Absolute path to the hook module file.
-
-    Returns:
-        callable: The run function from the module, or None if loading fails.
-
-    Example:
-        >>> hook = load_hook('/path/to/hook.py')
-        >>> if hook:
-        ...     hook(context)
-    """
-    logger = getLogger(__name__)
     try:
         spec = importlib.util.spec_from_file_location("hook", file_path)
         module = importlib.util.module_from_spec(spec)
