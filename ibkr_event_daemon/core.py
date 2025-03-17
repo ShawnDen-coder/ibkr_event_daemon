@@ -10,15 +10,16 @@ The module consists of two main components:
 Example:
     >>> from ibkr_event_daemon.core import IBKRClient
     >>> from ibkr_event_daemon.config import IbkrSettings
-    >>> 
+    >>>
     >>> # Create client with custom settings
     >>> config = IbkrSettings(port=4002)  # Use paper trading port
     >>> client = IBKRClient(config=config)
-    >>> 
+    >>>
     >>> # Start the client (this will block until interrupted)
     >>> client.excute()
-"""
+"""  # noqa: W291
 
+import os
 from typing import Protocol
 
 from ib_async import IB
@@ -27,7 +28,6 @@ from typing_extensions import Optional
 
 from ibkr_event_daemon import utils
 from ibkr_event_daemon.config import IbkrSettings
-from ibkr_event_daemon.constants import ENV_PREFIX
 
 
 LoggerType = logger.__class__
@@ -99,7 +99,7 @@ class IBKRClient:
             >>> client = IBKRClient(config=config)
         """
         self.ib: IB = ib or IB()
-        self.config:IbkrSettings = config or IbkrSettings()
+        self.config: IbkrSettings = config or IbkrSettings()
 
     def _setup_ib_session(self):
         """Set up and establish connection to TWS/Gateway.
@@ -128,9 +128,9 @@ class IBKRClient:
             >>> client = IBKRClient()
             >>> client._setup_callback()  # Loads and initializes all hooks
         """
-        env_var = f"{ENV_PREFIX}SETUP_PATHS"
-        files = utils.prepare_task_path(env_var)
+        files = self.config.setup_paths.split(os.pathsep)
         logger.info(f"get setup file hooks: {files}")
+        files = utils.prepare_task_path(files)
         for item in files:
             moudle: Optional[HookModule] = utils.load_hook(item)
             if not moudle:
@@ -200,9 +200,9 @@ class IBKRClient:
 
 if __name__ == "__main__":
     from ibkr_event_daemon.utils import setup_logger
-    
+
     # Setup logger with default settings
     setup_logger(log_level="DEBUG")
-    
+
     ib = IBKRClient()
     ib.excute()

@@ -16,9 +16,11 @@ import importlib
 import os
 import sys
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
+from typing import Union
 
 from loguru import logger
+from typing_extensions import List
 
 
 def setup_logger(
@@ -26,7 +28,7 @@ def setup_logger(
     log_file: Optional[Union[str, Path]] = None,
     rotation: str = "100 MB",
     retention: str = "1 week",
-    format: str = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+    format: str = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",  # noqa: E501
 ) -> None:
     """Set up loguru logger with specified configuration.
 
@@ -57,26 +59,16 @@ def setup_logger(
     logger.remove()
 
     # Add console handler
-    logger.add(
-        sys.stderr,
-        format=format,
-        level=log_level,
-        colorize=True
-    )
+    logger.add(sys.stderr, format=format, level=log_level, colorize=True)
 
     # Add file handler if log_file is specified
     if log_file:
         log_file = Path(log_file)
         # Create parent directories if they don't exist
         log_file.parent.mkdir(parents=True, exist_ok=True)
-        
+
         logger.add(
-            str(log_file),
-            format=format,
-            level=log_level,
-            rotation=rotation,
-            retention=retention,
-            compression="zip"
+            str(log_file), format=format, level=log_level, rotation=rotation, retention=retention, compression="zip"
         )
 
     logger.info(f"Logger setup completed. Level: {log_level}, File: {log_file if log_file else 'None'}")
@@ -137,26 +129,25 @@ def collect_pyfile(path: str) -> Optional[list[str]]:
     return None
 
 
-def prepare_task_path(env_key: str = "IB_EVENT_DAEMON_SETUP_PATHS") -> list[str]:
-    """Prepare a list of Python file paths from environment variable.
+def prepare_task_path(file_path: List[str]) -> list[str]:
+    """Prepare a list of Python file paths from a list of directory paths.
+
+    This function processes a list of directory paths and collects all Python files
+    within those directories, excluding __init__.py files.
 
     Args:
-        env_key: Environment variable key containing paths. Defaults to "IB_EVENT_DAEMON_SETUP_PATHS".
+        file_path: List of directory paths to search for Python files.
 
     Returns:
         list[str]: List of Python file paths, excluding __init__.py files.
 
     Example:
-        >>> # Set environment variable
-        >>> os.environ['IB_EVENT_DAEMON_SETUP_PATHS'] = '/path/to/hooks:/another/path'
-        >>> # Get Python files from paths
-        >>> files = prepare_task_path('IB_EVENT_DAEMON_SETUP_PATHS')
-        >>> print(f"Found {len(files)} hook files")
-        >>> # Use default environment variable
-        >>> files = prepare_task_path()
+        >>> # Process a list of paths
+        >>> paths = ['./example', '/another/path']
+        >>> files = prepare_task_path(paths)
+        >>> print(f"Found {len(files)} Python files")
     """
-    env_data: list[str] = os.getenv(env_key, "").split(os.pathsep)
-    env_data = [path for path in env_data if os.path.exists(path)]
+    env_data = [path for path in file_path if os.path.exists(path)]
     py_files: list[str] = []
     for path in env_data:
         py_files.extend(collect_pyfile(path))

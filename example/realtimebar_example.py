@@ -31,14 +31,14 @@ def setup(ib: IB, logger: LoggerType) -> None:
         >>> def setup(ib, logger):
         ...     usd_jpy = Forex('USDJPY')
         ...     bars = ib.reqRealTimeBars(
-        ...         usd_jpy, 
+        ...         usd_jpy,
         ...         barSize=5,
         ...         whatToShow="MIDPOINT",
         ...         useRTH=True
         ...     )
         ...     bars.updateEvent += onBarUpdate
-    """
-    usd_jpy = Forex('USDJPY')
+    """  # noqa: W291
+    usd_jpy = Forex("USDJPY")
     bars = ib.reqRealTimeBars(usd_jpy, barSize=5, whatToShow="MIDPOINT", useRTH=True)
     bars.updateEvent += onBarUpdate
 

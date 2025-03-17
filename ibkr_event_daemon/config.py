@@ -64,6 +64,8 @@ class IbkrSettings(BaseSettings):
     timeout: int = Field(default=4, validation_alias=f"{ENV_PREFIX}timeout", alias="timeout")
     readonly: bool = Field(default=False, validation_alias=f"{ENV_PREFIX}readonly", alias="readonly")
     account: str = Field(default="", validation_alias=f"{ENV_PREFIX}account", alias="account")
-    raisesyncerrors: bool = Field(default=False, validation_alias=f"{ENV_PREFIX}raisesyncerrors", alias="raiseSyncErrors")
+    raisesyncerrors: bool = Field(
+        default=False, validation_alias=f"{ENV_PREFIX}raisesyncerrors", alias="raiseSyncErrors"
+    )  # noqa: E501
 
     setup_paths: Optional[str] = Field(default=None, validation_alias=f"{ENV_PREFIX}setup_paths", alias="setup_paths")
