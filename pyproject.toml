@@ -17,6 +17,9 @@ dependencies = [
     "supervisor>=4.2.5",
 ]
 
+[project.scripts]
+ibkr-daemon = "ibkr_event_daemon.__main__:cli"
+
 [project.optional-dependencies]
 dev = [
     "ruff>=0.9.7",  # Update ruff version
@@ -42,7 +45,7 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 120
-include = ["pyproject.toml", "ibkr_event_daemon/**/*.py"]
+include = ["pyproject.toml", "ibkr_event_daemon/**/*.py","example/**/*.py"]
 target-version = "py312"
 
 [tool.ruff.lint]
