@@ -10,15 +10,15 @@ from ibkr_event_daemon.config import IbkrSettings
 
 LoggerType = logger.__class__
 
-class HookModule(Protocol):
-    def setup(self,ib: IB, logger: LoggerType)->None:
+
+class HookModule(Protocol):  # noqa: D101
+    def setup(self, ib: IB, logger: LoggerType) -> None:  # noqa: D102
         ...
 
 
-
-class IBKRClient:
-    def __init__(self,ib:Optional[IB]=None,config:IbkrSettings = IbkrSettings):
-        self.ib:IB = ib or IB()
+class IBKRClient:  # noqa: D101
+    def __init__(self, ib: Optional[IB] = None, config: IbkrSettings = IbkrSettings):  # noqa: D107
+        self.ib: IB = ib or IB()
         self.config = config()
 
     def _setup_ib_session(self):
@@ -28,9 +28,10 @@ class IBKRClient:
         self.ib.connect(**_config)
 
     def _setup_callback(self):
-        files = utils.prepare_task_path()
+        files = utils.prepare_task_path("IBKR_PATHS")
+        logger.info(f"get setup file hooks: {files}")
         for item in files:
-            moudle:Optional[HookModule] = utils.load_hook(item)
+            moudle: Optional[HookModule] = utils.load_hook(item)
             if not moudle:
                 continue
             try:
@@ -39,18 +40,19 @@ class IBKRClient:
             except AttributeError as e:
                 logger.exception(f"load moudle {moudle.__name__} error: \n {e}")
 
-    def setup(self):
-        self._setup_ib_session()
+    def setup(self):  # noqa: D102
+        if not self.ib.isConnected():
+            self._setup_ib_session()
         self._setup_callback()
 
-    def pre_action(self):
+    def pre_action(self):  # noqa: D102
         self.setup()
 
-    def stop(self):
+    def stop(self):  # noqa: D102
         logger.info("Stopping the IBKR daemon ...")
         self.ib.disconnect()
 
-    def excute(self)->None:
+    def excute(self) -> None:  # noqa: D102
         try:
             self.pre_action()
             self.ib.run()
@@ -58,8 +60,10 @@ class IBKRClient:
             self.stop()
             logger.info("Program interrupted and stopped.")
 
-if __name__ =="__main__":
+
+if __name__ == "__main__":
     import sys
+
     logger.remove()
     logger.add(sys.stderr, level="DEBUG")
 
