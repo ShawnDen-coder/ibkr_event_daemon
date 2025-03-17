@@ -123,11 +123,11 @@ def start(
         settings_dict["port"] = port
     if client_id:
         settings_dict["clientid"] = client_id
-    
+
     config = IbkrSettings(**settings_dict)
-    
+
     logger.info(f"Starting IBKR daemon with config: {config.model_dump()}")
-    
+
     client = IBKRClient(config=config)
     client.excute()
 
@@ -145,13 +145,13 @@ def show_config():
     settings = IbkrSettings()
     click.echo("Current Configuration:")
     click.echo("-" * 50)
-    
+
     # Show environment variables
     click.echo("Environment Variables:")
     for key, value in os.environ.items():
         if key.startswith(ENV_PREFIX):
             click.echo(f"  {key}={value}")
-    
+
     click.echo("\nEffective Settings:")
     for key, value in settings.model_dump().items():
         click.echo(f"  {key}={value}")
@@ -166,17 +166,17 @@ def show_config():
 def init_config(force: bool):
     """Initialize a new .env file with default settings."""
     env_file = Path(".env")
-    
+
     if env_file.exists() and not force:
         click.echo("Error: .env file already exists. Use --force to overwrite.")
         return
-    
+
     settings = IbkrSettings()
     with env_file.open("w") as f:
         for key, value in settings.model_dump().items():
             env_key = f"{ENV_PREFIX}{key.upper()}"
             f.write(f"{env_key}={value}\n")
-    
+
     click.echo(f"Created .env file at {env_file.absolute()}")
 
 
