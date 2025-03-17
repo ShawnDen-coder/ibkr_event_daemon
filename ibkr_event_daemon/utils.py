@@ -6,7 +6,7 @@ from typing import Optional
 from loguru import logger
 
 
-def load_hook(file_path):
+def load_hook(file_path):  # noqa: D103
     try:
         spec = importlib.util.spec_from_file_location("hook", file_path)
         module = importlib.util.module_from_spec(spec)
