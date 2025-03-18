@@ -17,13 +17,19 @@ ENV PYTHONUNBUFFERED=1 \
 # 安装系统依赖
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        supervisor \
+    supervisor \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/log/supervisor
 
+# 创建 supervisor 配置目录
+RUN mkdir -p /etc/supervisor/conf.d
+
 # 复制项目文件
 COPY . .
+
+# 复制 supervisor 配置文件
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # 安装项目依赖
 RUN pip install -e .
@@ -37,6 +43,6 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 
 # 添加标签
 LABEL maintainer="Shawn Deng <shawndeng1109@qq.com>" \
-      description="IBKR Event Daemon with FX Bar Handler support" \
-      usage.volume="挂载数据目录：docker run -v /path/to/data:/app/data ..." \
-      usage.env="环境变量配置：docker run -e VARIABLE=value ..."
+    description="IBKR Event Daemon with FX Bar Handler support" \
+    usage.volume="挂载数据目录：docker run -v /path/to/data:/app/data ..." \
+    usage.env="环境变量配置：docker run -e VARIABLE=value ..."
