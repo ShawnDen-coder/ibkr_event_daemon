@@ -24,7 +24,7 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           PERSONAL_ACCESS_TOKEN: op://shawndengdev/github_access_token/credential
-          DOCKER_USERNAME: op://shawndengdev/dockerhub/username
+          DOCKER_USERNAME: shawndengdocker
           DOCKER_TOKEN: op://shawndengdev/dockerhub/credential
 
       - name: Log in to Docker Hub
