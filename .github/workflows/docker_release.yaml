@@ -29,10 +29,10 @@ jobs:
           DOCKER_TOKEN: op://shawndengdev/dockerhub/credential
 
       - name: Print Docker Username
-        run: echo "Docker Username| ${{ env.DOCKER_USERNAME }}"
+        run: echo "Docker Username: ${{ env.DOCKER_USERNAME }}"
 
       - name: Print Image Name
-        run: echo "Image Name| ${{ env.DOCKER_USERNAME }}/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
+        run: echo "Image Name: ${{ env.DOCKER_USERNAME }}/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
