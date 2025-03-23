@@ -41,7 +41,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKERHUB_IMAGE_NAME }}
+            ${{ env.DOCKERHUB_IMAGE_NAME }}
             ${{ env.GITHUB_IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
